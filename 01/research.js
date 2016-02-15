@@ -32,55 +32,58 @@ for(i = 0; i < count; i++) {
 }
 timings2 = timings2.map(getFreq);
 
-//for(i = 0; i < count; i++) {
-//  console.log(
-//    [
-//      timings1[i],
-//      timings2[i]
-//    ].join('\t')
-//  );
-//}
-//console.log('=========');
-//timings1.sort((a,b) => a - b);
-//timings2.sort((a,b) => a - b);
-//for(i = 0; i < count; i++) {
-//  console.log(
-//    [
-//      timings1[i],
-//      timings2[i]
-//    ].join('\t')
-//  );
-//}
-//console.log(getPlot(timings1).join('\n'));
-//console.log('=========');
-//console.log(getPlot(timings2).join('\n'));
-//console.log('asd');
+
 //var start2 = Date.now();
-//var step = 10;
-//var curDiff = 1000;
-//var q1, w1;
-//for(var i1 = 0; i1 <= count; i1+=step) {
-//  for(var j1 = i1 + 1; j1 <= count; j1+=step) {
-//    var tmp = getSigmas(timings1, i1, j1);
-//    if(tmp < curDiff) {
-//      curDiff = tmp;
-//      q1 = i1;
-//      w1 = j1;
-//    }
-//  }
-//}
+//console.log('==========================');
+//console.log(trySigmas(timings1));
+//console.log('==========================');
+//console.log(trySigmas(timings1.map(x=>Math.exp(x))));
+//console.log('==========================');
+//console.log(trySigmas(timings1.map(x=>Math.log(x))));
+//console.log('==========================');
+//console.log('==========================');
+//console.log(trySigmas(timings2));
+//console.log('==========================');
+//console.log(trySigmas(timings2.map(x=>Math.exp(x))));
+//console.log('==========================');
+//console.log(trySigmas(timings2.map(x=>Math.log(x))));
+//console.log('==========================');
+var t1 = getSigmas(timings1, 0, 950)[2].avg;
+var t2 = getSigmas(timings2, 0, 950)[2].avg;
+console.log([t1, t2, t1 - t2]);
+
+function trySigmas(timings1) {
+  var result = [];
+  var step = 10;
+  var curDiff = 1000;
+  var q1, w1;
+  for(var i1 = 0; i1 < timings1.length; i1+=step) {
+    for(var j1 = i1 + 700; j1 < timings1.length; j1+=step) {
+      var tmp = getSigmas(timings1, i1, j1);
+      result.push([i1, j1].concat(tmp));
+    }
+  }
+  //console.log(result.length);
+  //console.log(result.slice(0, 10));
+  result = result.filter(function(x) {
+    return x[2] > 1.90 && x[2] < 2.10 &&
+        x[3] > 2.90 && x[3] < 3.10;
+  });
+  result = result.map(x=>x.join('\t'));
+  return result.join('\n');
+}
 //console.log('qwe', Date.now() - start2);
 //console.log(q1, w1);
-timings1.sort((a,b) => a - b).slice(100, -100);
-timings2.sort((a,b) => a - b).slice(100, -100);
-console.log(
-  timings1.reduce((a,b)=>a+b) / timings1.length,
-  timings1[Math.round(timings1.length / 2)]
-);
-console.log(
-  timings2.reduce((a,b)=>a+b) / timings2.length,
-  timings2[Math.round(timings1.length / 2)]
-);
+//timings1.sort((a,b) => a - b).slice(100, -100);
+//timings2.sort((a,b) => a - b).slice(100, -100);
+//console.log(
+//  timings1.reduce((a,b)=>a+b) / timings1.length,
+//  timings1[Math.round(timings1.length / 2)]
+//);
+//console.log(
+//  timings2.reduce((a,b)=>a+b) / timings2.length,
+//  timings2[Math.round(timings1.length / 2)]
+//);
 
 //console.log(
 //  timings1
@@ -125,8 +128,8 @@ function getSigmas(timings, i1, j1) {
 
   //console.log(result1.length, result2.length, result3.length);
   //console.log(delta1, delta2, delta3);
-  //console.log(delta2 / delta1, delta3 / delta1);
-  return [result1[result1.length - 1] - delta1, delta1];
+  return [delta2 / delta1, delta3 / delta1, {avg:(result1[result1.length - 1] + result1[0]) / 2, delta1: delta1}];
+  //return [result1[result1.length - 1] - delta1, delta1];
   //return Math.abs((delta2 / delta1) / 2 - 1) + Math.abs((delta3 / delta1) / 3 - 1);
 }
 
