@@ -1,0 +1,7 @@
+{
+  "name": "bench-research",
+  "version": "0.0.1",
+  "devDependencies": {
+    "benchmark": "^2.1.0"
+  }
+}
