@@ -11,10 +11,11 @@
 //  )
 var timings1 = [],
   timings2 = [],
-  count = 1000,
+  count = 100,
   arr,
   start,
   i;
+var totalStart = Date.now();
 
 arr = '01234567890abcdef'.repeat(10000).split('');
 for(i = 0; i < count; i++) {
@@ -48,15 +49,23 @@ timings2 = timings2.map(getFreq);
 //console.log('==========================');
 //console.log(trySigmas(timings2.map(x=>Math.log(x))));
 //console.log('==========================');
-var t1 = getSigmas(timings1, 0, 950)[2].avg;
-var t2 = getSigmas(timings2, 0, 950)[2].avg;
-console.log([t1, t2, t1 - t2]);
+var t1 = getSigmas(timings1, 0, 0.95 * count)[2].avg;
+var t2 = getSigmas(timings2, 0, 0.95 * count)[2].avg;
+
+console.log(JSON.stringify({
+  totalTime: Date.now() - totalStart,
+  fastest: t1 < t2 ? "JSON.stringify(10K)" : "JSON.stringify(9.9K)",
+  results: {
+    "JSON.stringify(10K)": 1 / t1,
+    "JSON.stringify(9.9K)": 1 / t2
+  }
+}));
+
+
 
 function trySigmas(timings1) {
   var result = [];
   var step = 10;
-  var curDiff = 1000;
-  var q1, w1;
   for(var i1 = 0; i1 < timings1.length; i1+=step) {
     for(var j1 = i1 + 700; j1 < timings1.length; j1+=step) {
       var tmp = getSigmas(timings1, i1, j1);

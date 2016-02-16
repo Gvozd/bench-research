@@ -5,7 +5,7 @@ var totalTime = 0,
   results = {}
   ;
 
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 100; i++) {
   var result = JSON.parse(
     child_process.execSync(`node ${__dirname}/${process.argv[2]}`)
   );

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "b-async": "node ./index.js benchmark-async.js",
-    "b-sync": "node ./index.js benchmark-sync.js"
+    "b-sync": "node ./index.js benchmark-sync.js",
+    "research": "node ./index.js research.js"
   }
 }
